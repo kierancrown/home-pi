@@ -1,0 +1,35 @@
+{
+  "name": "home-pi",
+  "description": "This is my smart home pi software",
+  "authors": "Kieran Crown <kieran.crown@gmail.com>",
+  "version": "1.0.0",
+  "license": "UNLICENCED",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc-watch --onSuccess \"node dist\"",
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/chalk-animation": "^1.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.2",
+    "tsc-watch": "^4.4.0",
+    "typescript": "^4.3.5"
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kierancrown/home-pi.git"
+  },
+  "author": "Kieran Crown <kieran.crown@gmail.com>"
+}
