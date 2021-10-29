@@ -41,8 +41,9 @@ class HueController extends controller_1.Controller {
         this.server.registerRoute('get', '/hue/light/:id', (req, res) => {
             const innerReq = req;
             const id = innerReq.params.id;
+            const light = this.discoveredLights.find((light) => light.id === id);
             res.setHeader('Content-Type', 'application/json');
-            res.json(this.discoveredLights.find((light) => light.id === id));
+            res.json(light || { error: 'Light cannot be found' });
         });
     }
     discoverLights() {
