@@ -1,11 +1,12 @@
 import { Controller } from './controller';
 import axios from 'axios';
-import { Lights } from '../types/hue';
+import { Light, Lights } from '../types/hue';
+import { Request } from 'express';
 
 class HueController extends Controller {
     private baseUrl: string;
     private bridgeIP: string;
-    discoveredLights: unknown[] = [];
+    discoveredLights: Light[] = [];
 
     constructor(BridgeIP: string, authKey: string) {
         super('Hue');
@@ -17,6 +18,7 @@ class HueController extends Controller {
 
     registerRoutes(): void {
         super.registerRoutes(true);
+        // [GET] /hue/status route
         this.server.registerRoute('get', '/hue/status', (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({
@@ -25,9 +27,33 @@ class HueController extends Controller {
                 lights: this.discoveredLights,
             });
         });
+        // [GET] /hue/lights route
         this.server.registerRoute('get', '/hue/lights', (req, res) => {
-            res.send('Hello ');
+            res.setHeader('Content-Type', 'application/json');
+            res.json(this.discoveredLights);
         });
+        interface IGetUserAuthInfoRequest extends Request {
+            params: {
+                id: string;
+            }; // or any other type
+        }
+        // [GET] /hue/light/{id}
+        this.server.registerRoute('get', '/hue/light/:id', (req, res) => {
+            const innerReq = req as IGetUserAuthInfoRequest;
+            const id = innerReq.params.id;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(this.discoveredLights.find((light) => light.id === id));
+        });
+        // /hue/light/{id} route
+        // app.put("/hue/light", jsonParser, (req, res) => {
+        //     const body = req.body;
+        //     if (Array.isArray(body)) {
+        //       body.forEach((b) => {
+        //         changeLightState(b.id, { ...b.state });
+        //       });
+        //     } else changeLightState(body.id, { ...body.state });
+        //     res.json(body);
+        //   });
     }
 
     async discoverLights(): Promise<void> {

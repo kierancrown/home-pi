@@ -35,7 +35,14 @@ class HueController extends controller_1.Controller {
             });
         });
         this.server.registerRoute('get', '/hue/lights', (req, res) => {
-            res.send('Hello ');
+            res.setHeader('Content-Type', 'application/json');
+            res.json(this.discoveredLights);
+        });
+        this.server.registerRoute('get', '/hue/light/:id', (req, res) => {
+            const innerReq = req;
+            const id = innerReq.params.id;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(this.discoveredLights.find((light) => light.id === id));
         });
     }
     discoverLights() {

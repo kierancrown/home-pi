@@ -9,7 +9,7 @@ const moment_1 = __importDefault(require("moment"));
 class WebServer {
     constructor() {
         this.startTime = new Date();
-        this.app = (0, express_1.default)();
+        this.app = express_1.default();
         this.app.get('/', (_, res) => {
             res.json({ uptime: this.getUptime() });
         });
@@ -21,7 +21,7 @@ class WebServer {
         return WebServer.instance;
     }
     getUptime() {
-        return (0, moment_1.default)(this.startTime).fromNow(true);
+        return moment_1.default(this.startTime).fromNow(true);
     }
     startServer(port) {
         this.app.listen(port, () => {

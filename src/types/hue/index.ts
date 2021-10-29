@@ -1,4 +1,5 @@
 interface Light {
+    id?: string;
     state: {
         on: boolean;
         bri: number;
