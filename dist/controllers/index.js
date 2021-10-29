@@ -28,16 +28,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.initControllers = void 0;
 const dotenv = __importStar(require("dotenv"));
-const controllers_1 = require("./controllers");
-const server_1 = require("./server");
-function main() {
+const hue_1 = require("./hue");
+function initControllers() {
     return __awaiter(this, void 0, void 0, function* () {
         dotenv.config();
-        const server = server_1.WebServer.getInstance();
-        server.startServer(Number(process.env.SERVER_PORT) || 3000);
-        yield (0, controllers_1.initControllers)();
+        const registeredControllers = [];
+        if (typeof process.env.HUE_BRIDGE_IP === 'string' && typeof process.env.HUE_AUTH_KEY === 'string') {
+            registeredControllers.push(new hue_1.HueController(process.env.HUE_BRIDGE_IP, process.env.HUE_AUTH_KEY));
+        }
+        return registeredControllers;
     });
 }
-main();
+exports.initControllers = initControllers;
 //# sourceMappingURL=index.js.map
