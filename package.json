@@ -11,10 +11,12 @@
     "build": "tsc"
   },
   "dependencies": {
-    "chalk": "^4.1.1"
+    "chalk": "^4.1.1",
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
     "@types/chalk-animation": "^1.6.0",
+    "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "eslint": "^7.31.0",
