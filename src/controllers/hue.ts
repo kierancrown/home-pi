@@ -45,16 +45,16 @@ class HueController extends Controller {
             res.setHeader('Content-Type', 'application/json');
             res.json(light || { error: 'Light cannot be found' });
         });
-        // /hue/light/{id} route
-        // app.put("/hue/light", jsonParser, (req, res) => {
-        //     const body = req.body;
-        //     if (Array.isArray(body)) {
-        //       body.forEach((b) => {
-        //         changeLightState(b.id, { ...b.state });
-        //       });
-        //     } else changeLightState(body.id, { ...body.state });
-        //     res.json(body);
-        //   });
+        // [PUT] /hue/light/{id}
+        this.server.registerRoute('put', '/hue/light/:id', (req, res) => {
+            const body = req.body;
+            if (Array.isArray(body)) {
+                body.forEach((b) => {
+                    this.changeLightState(b.id, { ...b.state });
+                });
+            } else this.changeLightState(body.id, { ...body.state });
+            res.json(body);
+        });
     }
 
     async discoverLights(): Promise<void> {

@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, json, urlencoded } from 'express';
 import moment from 'moment';
 
 class WebServer {
@@ -12,6 +12,8 @@ class WebServer {
         this.app.get('/', (_, res) => {
             res.json({ uptime: this.getUptime() });
         });
+        this.app.use(urlencoded());
+        this.app.use(json());
     }
 
     public static getInstance(): WebServer {
@@ -42,7 +44,10 @@ class WebServer {
                 this.app.get(path, callback);
                 break;
             case 'post':
+                this.app.post(path, callback);
+                break;
             case 'put':
+                this.app.put(path, callback);
                 break;
         }
     }
