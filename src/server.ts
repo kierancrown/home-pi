@@ -12,7 +12,7 @@ class WebServer {
         this.app.get('/', (_, res) => {
             res.json({ uptime: this.getUptime() });
         });
-        this.app.use(urlencoded());
+        this.app.use(urlencoded({ extended: true }));
         this.app.use(json());
     }
 

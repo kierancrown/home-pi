@@ -31,12 +31,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initControllers = void 0;
 const dotenv = __importStar(require("dotenv"));
 const hue_1 = require("./hue");
+const lgtv_webos_1 = require("./lgtv-webos");
 function initControllers() {
     return __awaiter(this, void 0, void 0, function* () {
         dotenv.config();
         const registeredControllers = [];
         if (typeof process.env.HUE_BRIDGE_IP === 'string' && typeof process.env.HUE_AUTH_KEY === 'string') {
             registeredControllers.push(new hue_1.HueController(process.env.HUE_BRIDGE_IP, process.env.HUE_AUTH_KEY));
+        }
+        if (typeof process.env.WEBOS_TV_IP === 'string') {
+            registeredControllers.push(new lgtv_webos_1.WebOSController(process.env.WEBOS_TV_IP));
         }
         return registeredControllers;
     });

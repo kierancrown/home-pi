@@ -32,7 +32,7 @@ class WebServer {
         this.app.get('/', (_, res) => {
             res.json({ uptime: this.getUptime() });
         });
-        this.app.use((0, express_1.urlencoded)());
+        this.app.use((0, express_1.urlencoded)({ extended: true }));
         this.app.use((0, express_1.json)());
     }
     static getInstance() {
