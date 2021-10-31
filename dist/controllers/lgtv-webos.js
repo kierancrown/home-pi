@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebOSController = void 0;
 const controller_1 = require("./controller");
 const lgtv2_1 = __importDefault(require("lgtv2"));
+const chalk_1 = require("chalk");
 class WebOSController extends controller_1.Controller {
     constructor(tvIP) {
         super('LG WebOS TV');
@@ -94,6 +95,7 @@ class WebOSController extends controller_1.Controller {
                 return;
             this.tvController = new lgtv2_1.default({ url: `ws://${this.tvIP}:3000` });
             this.tvController.on('connect', this.onConnect.bind(this));
+            this.tvController.on('error', (err) => console.warn((0, chalk_1.yellow)(err.message)));
         });
     }
 }

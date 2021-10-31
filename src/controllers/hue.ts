@@ -53,12 +53,13 @@ class HueController extends Controller {
                     this.changeLightState(b.id, { ...b.state });
                 });
             } else this.changeLightState(body.id, { ...body.state });
-            res.json(body);
+            res.json(this.discoveredLights);
         });
     }
 
     async discoverLights(): Promise<void> {
         const lights: Lights = await this.getLights();
+        if (Object.keys(lights).length) this.discoveredLights = [];
         for (const id in lights) {
             this.discoveredLights.push({ id, ...lights[id] });
         }
@@ -76,8 +77,10 @@ class HueController extends Controller {
         // log(`Attempting to change light ${id} to state: ${JSON.stringify(state)}`);
         // log(`${baseUrl}/lights/${id}/state`);
         const res = await axios.put(`${this.baseUrl}/lights/${id}/state`, JSON.stringify(state));
-        if (res.status === 200) return res.data;
-        else return { error: res.statusText, status: res.status };
+        if (res.status === 200) {
+            await this.discoverLights();
+            return res.data;
+        } else return { error: res.statusText, status: res.status };
     }
 }
 

@@ -24,6 +24,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebServer = void 0;
 const express_1 = __importStar(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const nocache_1 = __importDefault(require("nocache"));
 const moment_1 = __importDefault(require("moment"));
 class WebServer {
     constructor() {
@@ -34,6 +36,8 @@ class WebServer {
         });
         this.app.use((0, express_1.urlencoded)({ extended: true }));
         this.app.use((0, express_1.json)());
+        this.app.use((0, cors_1.default)());
+        this.app.use((0, nocache_1.default)());
     }
     static getInstance() {
         if (!WebServer.instance) {

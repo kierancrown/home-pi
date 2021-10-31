@@ -45,7 +45,7 @@ class HueController extends controller_1.Controller {
             res.setHeader('Content-Type', 'application/json');
             res.json(light || { error: 'Light cannot be found' });
         });
-        this.server.registerRoute('put', '/hue/light/:id', (req, res) => {
+        this.server.registerRoute('put', '/hue/lights/state', (req, res) => {
             const body = req.body;
             if (Array.isArray(body)) {
                 body.forEach((b) => {
@@ -54,12 +54,14 @@ class HueController extends controller_1.Controller {
             }
             else
                 this.changeLightState(body.id, Object.assign({}, body.state));
-            res.json(body);
+            res.json(this.discoveredLights);
         });
     }
     discoverLights() {
         return __awaiter(this, void 0, void 0, function* () {
             const lights = yield this.getLights();
+            if (Object.keys(lights).length)
+                this.discoveredLights = [];
             for (const id in lights) {
                 this.discoveredLights.push(Object.assign({ id }, lights[id]));
             }
@@ -77,8 +79,10 @@ class HueController extends controller_1.Controller {
     changeLightState(id, state) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield axios_1.default.put(`${this.baseUrl}/lights/${id}/state`, JSON.stringify(state));
-            if (res.status === 200)
+            if (res.status === 200) {
+                yield this.discoverLights();
                 return res.data;
+            }
             else
                 return { error: res.statusText, status: res.status };
         });

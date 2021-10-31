@@ -1,5 +1,6 @@
 import { Controller } from './controller';
 import lgtv from 'lgtv2';
+import { yellow } from 'chalk';
 
 interface WebOSToastResponse {
     returnValue: boolean;
@@ -85,6 +86,7 @@ class WebOSController extends Controller {
         if (this.isConnected) return;
         this.tvController = new lgtv({ url: `ws://${this.tvIP}:3000` });
         this.tvController.on('connect', this.onConnect.bind(this));
+        this.tvController.on('error', (err) => console.warn(yellow(err.message)));
     }
 }
 

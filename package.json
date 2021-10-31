@@ -6,25 +6,30 @@
   "license": "UNLICENCED",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node dist\"",
+    "start-watch": "tsc-watch --onSuccess \"node dist\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "concurrently --kill-others \"npm run start-watch\" \"cd frontend; npm run dev\""
   },
   "dependencies": {
     "axios": "^0.24.0",
     "chalk": "^4.1.1",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "lgtv2": "^1.6.3",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "nocache": "^3.0.1"
   },
   "devDependencies": {
     "@types/chalk-animation": "^1.6.0",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/lgtv2": "^1.4.2",
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
+    "concurrently": "^6.3.0",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",

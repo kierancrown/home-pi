@@ -1,4 +1,6 @@
 import express, { Request, Response, json, urlencoded } from 'express';
+import cors from 'cors';
+import nocache from 'nocache';
 import moment from 'moment';
 
 class WebServer {
@@ -14,6 +16,8 @@ class WebServer {
         });
         this.app.use(urlencoded({ extended: true }));
         this.app.use(json());
+        this.app.use(cors());
+        this.app.use(nocache());
     }
 
     public static getInstance(): WebServer {
