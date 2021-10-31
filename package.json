@@ -8,7 +8,7 @@
   "scripts": {
     "start-watch": "tsc-watch --onSuccess \"node dist\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "build": "tsc",
+    "build": "tsc; cd frontend; npm run build",
     "dev": "concurrently --kill-others \"npm run start-watch\" \"cd frontend; npm run dev\""
   },
   "dependencies": {
