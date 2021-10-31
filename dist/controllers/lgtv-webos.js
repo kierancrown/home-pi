@@ -100,7 +100,7 @@ class WebOSController extends controller_1.Controller {
                     this.isConnected = false;
                     this.discoverTv();
                 }
-                console.warn(chalk_1.yellow(err.message));
+                console.warn((0, chalk_1.yellow)(err.message));
             });
         });
     }
@@ -108,7 +108,6 @@ class WebOSController extends controller_1.Controller {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isConnected)
                 return;
-            console.log('Looking for LG TV');
             const ip = this.tvIP;
             const ws = new ws_1.default(`ws://${this.tvIP}:3000`, { handshakeTimeout: 1000 });
             const setIsConnected = () => {
@@ -121,7 +120,7 @@ class WebOSController extends controller_1.Controller {
                 ws.close();
             });
             ws.on('error', () => __awaiter(this, void 0, void 0, function* () {
-                yield utils_1.waitFor(1000);
+                yield (0, utils_1.waitFor)(1000);
                 yield this.discoverTv();
             }));
         });

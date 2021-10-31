@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Lights, LightState } from '../types/hue';
+import { waitFor } from '../utils';
 import LightView from './Light';
 
 export default function LightsView() {
@@ -12,6 +13,8 @@ export default function LightsView() {
         } else {
             console.error('Unable to get lights from API');
         }
+        await waitFor(2500);
+        await getLights();
     };
 
     useEffect(() => {

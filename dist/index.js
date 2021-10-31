@@ -36,7 +36,7 @@ function main() {
         dotenv.config();
         const server = server_1.WebServer.getInstance();
         server.startServer(Number(process.env.SERVER_PORT) || 3000);
-        yield controllers_1.initControllers();
+        yield (0, controllers_1.initControllers)();
     });
 }
 main();
