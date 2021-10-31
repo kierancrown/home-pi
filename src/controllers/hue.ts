@@ -45,8 +45,8 @@ class HueController extends Controller {
             res.setHeader('Content-Type', 'application/json');
             res.json(light || { error: 'Light cannot be found' });
         });
-        // [PUT] /hue/light/{id}
-        this.server.registerRoute('put', '/hue/light/:id', (req, res) => {
+        // [PUT] /hue/lights/state
+        this.server.registerRoute('put', '/hue/lights/state', (req, res) => {
             const body = req.body;
             if (Array.isArray(body)) {
                 body.forEach((b) => {
