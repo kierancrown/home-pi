@@ -16,6 +16,8 @@ exports.WebOSController = void 0;
 const controller_1 = require("./controller");
 const lgtv2_1 = __importDefault(require("lgtv2"));
 const chalk_1 = require("chalk");
+const utils_1 = require("../utils");
+const ws_1 = __importDefault(require("ws"));
 class WebOSController extends controller_1.Controller {
     constructor(tvIP) {
         super('LG WebOS TV');
@@ -84,18 +86,44 @@ class WebOSController extends controller_1.Controller {
         });
     }
     onConnect() {
-        this.isConnected = true;
         console.log('Connected to LG TV');
         this.displayMessage('Connected to Home Pi');
     }
-    discoverTv() {
+    connectToTv() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Running TV check', this.isConnected);
-            if (this.isConnected)
+            if (this.isConnected === false)
                 return;
             this.tvController = new lgtv2_1.default({ url: `ws://${this.tvIP}:3000` });
             this.tvController.on('connect', this.onConnect.bind(this));
-            this.tvController.on('error', (err) => console.warn((0, chalk_1.yellow)(err.message)));
+            this.tvController.on('error', (err) => {
+                if (err.message.startsWith('connect ETIMEDOUT')) {
+                    this.isConnected = false;
+                    this.discoverTv();
+                }
+                console.warn(chalk_1.yellow(err.message));
+            });
+        });
+    }
+    discoverTv() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.isConnected)
+                return;
+            console.log('Looking for LG TV');
+            const ip = this.tvIP;
+            const ws = new ws_1.default(`ws://${this.tvIP}:3000`, { handshakeTimeout: 1000 });
+            const setIsConnected = () => {
+                this.isConnected = true;
+                this.connectToTv();
+            };
+            ws.on('open', function open() {
+                console.log(`Found LG TV @ ${ip}:3000`);
+                setIsConnected();
+                ws.close();
+            });
+            ws.on('error', () => __awaiter(this, void 0, void 0, function* () {
+                yield utils_1.waitFor(1000);
+                yield this.discoverTv();
+            }));
         });
     }
 }

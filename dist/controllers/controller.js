@@ -11,10 +11,10 @@ class Controller {
     }
     registerRoutes(callingFromChild = false) {
         if (callingFromChild === false) {
-            console.warn((0, chalk_1.yellow)(`No routes registered for ${this.name}`));
+            console.warn(chalk_1.yellow(`No routes registered for ${this.name}`));
             return;
         }
-        console.warn((0, chalk_1.green)(`Registered routes for ${this.name}`));
+        console.warn(chalk_1.green(`Registered routes for ${this.name}`));
     }
     stopService() {
         console.log(`Unregistering controller ${this.name}`);

@@ -30,14 +30,14 @@ const moment_1 = __importDefault(require("moment"));
 class WebServer {
     constructor() {
         this.startTime = new Date();
-        this.app = (0, express_1.default)();
+        this.app = express_1.default();
         this.app.get('/', (_, res) => {
             res.json({ uptime: this.getUptime() });
         });
-        this.app.use((0, express_1.urlencoded)({ extended: true }));
-        this.app.use((0, express_1.json)());
-        this.app.use((0, cors_1.default)());
-        this.app.use((0, nocache_1.default)());
+        this.app.use(express_1.urlencoded({ extended: true }));
+        this.app.use(express_1.json());
+        this.app.use(cors_1.default());
+        this.app.use(nocache_1.default());
     }
     static getInstance() {
         if (!WebServer.instance) {
@@ -46,7 +46,7 @@ class WebServer {
         return WebServer.instance;
     }
     getUptime() {
-        return (0, moment_1.default)(this.startTime).fromNow(true);
+        return moment_1.default(this.startTime).fromNow(true);
     }
     startServer(port) {
         this.app.listen(port, () => {

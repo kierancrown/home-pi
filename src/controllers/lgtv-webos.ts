@@ -1,6 +1,8 @@
 import { Controller } from './controller';
 import lgtv from 'lgtv2';
 import { yellow } from 'chalk';
+import { waitFor } from '../utils';
+import WebSocket from 'ws';
 
 interface WebOSToastResponse {
     returnValue: boolean;
@@ -76,17 +78,43 @@ class WebOSController extends Controller {
     }
 
     onConnect(): void {
-        this.isConnected = true;
         console.log('Connected to LG TV');
         this.displayMessage('Connected to Home Pi');
     }
 
-    async discoverTv(): Promise<void> {
-        console.log('Running TV check', this.isConnected);
-        if (this.isConnected) return;
+    async connectToTv(): Promise<void> {
+        if (this.isConnected === false) return;
         this.tvController = new lgtv({ url: `ws://${this.tvIP}:3000` });
         this.tvController.on('connect', this.onConnect.bind(this));
-        this.tvController.on('error', (err) => console.warn(yellow(err.message)));
+        this.tvController.on('error', (err) => {
+            if (err.message.startsWith('connect ETIMEDOUT')) {
+                this.isConnected = false;
+                this.discoverTv();
+            }
+            console.warn(yellow(err.message));
+        });
+    }
+
+    async discoverTv(): Promise<void> {
+        if (this.isConnected) return;
+        const ip = this.tvIP;
+        const ws = new WebSocket(`ws://${this.tvIP}:3000`, { handshakeTimeout: 1000 });
+
+        const setIsConnected = () => {
+            this.isConnected = true;
+            this.connectToTv();
+        };
+
+        ws.on('open', function open() {
+            console.log(`Found LG TV @ ${ip}:3000`);
+            setIsConnected();
+            ws.close();
+        });
+
+        ws.on('error', async () => {
+            await waitFor(1000);
+            await this.discoverTv();
+        });
     }
 }
 
