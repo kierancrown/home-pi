@@ -40,7 +40,7 @@ function initControllers() {
             registeredControllers.push(new hue_1.HueController(process.env.HUE_BRIDGE_IP, process.env.HUE_AUTH_KEY));
         }
         if (typeof process.env.WEBOS_TV_IP === 'string') {
-            registeredControllers.push(new lgtv_webos_1.WebOSController(process.env.WEBOS_TV_IP));
+            registeredControllers.push(new lgtv_webos_1.WebOSController(process.env.WEBOS_TV_IP, process.env.WEBOS_TV_MAC || undefined));
         }
         return registeredControllers;
     });

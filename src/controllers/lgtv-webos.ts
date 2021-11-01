@@ -1,10 +1,10 @@
 import { Controller } from './controller';
 import lgtv from 'lgtv2';
-import { yellow } from 'chalk';
+import { dim, green, red, yellow } from 'chalk';
 import { waitFor } from '../utils';
 import WebSocket from 'ws';
 import { WebOSToastResponse } from '../types/webos';
-import { createMagicPacket } from 'wol';
+import { createMagicPacket, wake } from 'wol';
 
 class WebOSController extends Controller {
     private isConnected = false;
@@ -97,16 +97,32 @@ class WebOSController extends Controller {
             console.warn(yellow('Unable to turn on TV. Mac address missing in env'));
             return;
         }
-        createMagicPacket('');
+        wake(this.tvMac, () => {
+            console.log(green(`Sent LG TV package [${dim(this.tvMac)}]`));
+        });
     }
 
     async turnOffTv(): Promise<void> {
-        console.log('Do command here to turn shit off');
+        const _disconnectTv = async () => {
+            await this.disconnectFromTv();
+        };
+        this.tvController?.request('ssap://system/turnOff', function (err, res) {
+            if (err) console.error(red('Unable to turn off LG TV'));
+            else _disconnectTv();
+        });
     }
 
     onConnect(): void {
         console.log('Connected to LG TV');
-        this.displayMessage('Connected to Home Pi');
+        // this.displayMessage('Connected to Home Pi');
+    }
+
+    async disconnectFromTv(): Promise<void> {
+        if (this.isConnected === false || !this.tvController) return;
+        this.tvController.disconnect();
+        this.isConnected = false;
+        console.log('Disconnected from LG TV');
+        this.discoverTv();
     }
 
     async connectToTv(): Promise<void> {
