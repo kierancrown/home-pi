@@ -4,7 +4,7 @@ import { dim, green, red, yellow } from 'chalk';
 import { waitFor } from '../utils';
 import WebSocket from 'ws';
 import { WebOSToastResponse } from '../types/webos';
-import { createMagicPacket, wake } from 'wol';
+import { wake } from 'wol';
 
 class WebOSController extends Controller {
     private isConnected = false;
@@ -106,7 +106,7 @@ class WebOSController extends Controller {
         const _disconnectTv = async () => {
             await this.disconnectFromTv();
         };
-        this.tvController?.request('ssap://system/turnOff', function (err, res) {
+        this.tvController?.request('ssap://system/turnOff', (err) => {
             if (err) console.error(red('Unable to turn off LG TV'));
             else _disconnectTv();
         });
