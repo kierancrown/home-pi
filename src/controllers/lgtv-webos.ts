@@ -9,17 +9,35 @@ import { createMagicPacket } from 'wol';
 class WebOSController extends Controller {
     private isConnected = false;
     private tvIP: string;
+    private tvMac: string | undefined;
     private tvController: lgtv | undefined;
 
-    constructor(tvIP: string) {
+    constructor(tvIP: string, tvMacAddr?: string) {
         super('LG WebOS TV');
         this.tvIP = tvIP;
+        if (tvMacAddr) this.tvMac = tvMacAddr;
         this.registerRoutes();
         this.discoverTv();
     }
 
     registerRoutes(): void {
         super.registerRoutes(true);
+        // [PUT] /lgtv/system/power
+        this.server.registerRoute('put', '/lgtv/system/power', async (req, res) => {
+            const body = req.body;
+            if (typeof body['state'] === 'string' && (body['state'] === 'on' || body['state'] === 'off')) {
+                // Change power state
+                if (body['state'] === 'on') {
+                    await this.turnOnTv();
+                    res.json({ error: false, message: 'Sent magic packet to LG TV' });
+                } else {
+                    await this.turnOffTv();
+                    res.json({ error: false, message: 'Sent off comamnd to LG TV' });
+                }
+            } else {
+                res.json({ error: "Property 'state' must be either 'on' or 'off'" });
+            }
+        });
         // [POST] /lgtv/app/launch
         this.server.registerRoute('post', '/lgtv/app/launch', (req, res) => {
             if (!this.tvController) {
@@ -75,8 +93,15 @@ class WebOSController extends Controller {
     }
 
     async turnOnTv(): Promise<void> {
-        createMagicPacket("");
-        return;
+        if (!this.tvMac) {
+            console.warn(yellow('Unable to turn on TV. Mac address missing in env'));
+            return;
+        }
+        createMagicPacket('');
+    }
+
+    async turnOffTv(): Promise<void> {
+        console.log('Do command here to turn shit off');
     }
 
     onConnect(): void {

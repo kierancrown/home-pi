@@ -13,7 +13,7 @@ async function initControllers(): Promise<Controller[]> {
     }
     if (typeof process.env.WEBOS_TV_IP === 'string') {
         // LG Web OS TV
-        registeredControllers.push(new WebOSController(process.env.WEBOS_TV_IP));
+        registeredControllers.push(new WebOSController(process.env.WEBOS_TV_IP, process.env.WEBOS_TV_MAC || undefined));
     }
 
     return registeredControllers;
