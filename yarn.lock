@@ -157,6 +157,13 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
+"@types/wol@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/wol/-/wol-1.0.1.tgz#d22fc6ebe1751812efe6d93e3b50b6643ed3e8c5"
+  integrity sha512-UePm5RCODVm48xAFI+nf+cztaSFk61cEE+2qwaDVIZzY5LfubfOukJC4+5kCAT3raHyMiAbcy3CIVmk2siPlYg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/ws@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.2.0.tgz#75faefbe2328f3b833cb8dc640658328990d04f3"
@@ -1773,6 +1780,11 @@ which@^2.0.1:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
+
+wol@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/wol/-/wol-1.0.7.tgz#a2e70efca2a28324a744a5d12331d359da470ff7"
+  integrity sha512-kg7ETY8g3V5+3GVhUfWCVjeXuCmfrX6xfw4cw4c88+MtoxkbFmcs9Y5yhT1wwOL8inogFUQZ8JMzH9OekaaawQ==
 
 word-wrap@^1.2.3:
   version "1.2.3"

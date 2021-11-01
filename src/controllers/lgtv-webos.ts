@@ -3,11 +3,8 @@ import lgtv from 'lgtv2';
 import { yellow } from 'chalk';
 import { waitFor } from '../utils';
 import WebSocket from 'ws';
-
-interface WebOSToastResponse {
-    returnValue: boolean;
-    toastId: string;
-}
+import { WebOSToastResponse } from '../types/webos';
+import { createMagicPacket } from 'wol';
 
 class WebOSController extends Controller {
     private isConnected = false;
@@ -75,6 +72,11 @@ class WebOSController extends Controller {
                 else resolve(res);
             });
         });
+    }
+
+    async turnOnTv(): Promise<void> {
+        createMagicPacket("");
+        return;
     }
 
     onConnect(): void {
