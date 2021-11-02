@@ -29,7 +29,7 @@ class WebOSController extends Controller {
                 // Change power state
                 if (body['state'] === 'on') {
                     await this.turnOnTv();
-                    res.json({ error: false, message: 'Sent magic packet to LG TV' });
+                    res.json({ error: false, message: 'Sent on command to LG TV' });
                 } else {
                     await this.turnOffTv();
                     res.json({ error: false, message: 'Sent off comamnd to LG TV' });
