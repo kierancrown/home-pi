@@ -1,7 +1,7 @@
-version: '3.7'
+version: '3.8'
 
 services:
-    ts-node-docker:
+    home-pi-api:
         build:
             target: production
         command: node dist/index.js

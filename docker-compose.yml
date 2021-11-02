@@ -1,19 +1,39 @@
-version: '3.7'
+version: '3.8'
 
 services:
-    ts-node-docker:
+    home-pi-api:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: ./Dockerfile
             target: base
         volumes:
             - ./src:/home/node/app/src
             - ./nodemon.json:/home/node/app/nodemon.json
-        container_name: home-pi-docker
+        container_name: home-pi-api
         expose:
             - '8080'
-            - '3000'
         ports:
             - '8080:8080'
+        command: node dist/index.js
+    home-pi-ui:
+        build:
+            context: .
+            dockerfile: ./frontend/Dockerfile
+            target: runner
+        container_name: home-pi-ui
+        expose:
+            - '3000'
+        ports:
             - '3000:3000'
-        command: yarn dev
+        command: yarn start
+    mongodb:
+        image : mongo
+        container_name: home-pi-db
+        environment:
+        - PUID=1000
+        - PGID=1000
+        volumes:
+        - ./mongodb/database:/data/db
+        ports:
+        - 27017:27017
+        restart: unless-stopped

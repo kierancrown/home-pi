@@ -6,7 +6,7 @@ interface LightViewProps {
     onCallback: (id: string, state: LightState) => Promise<void>;
 }
 
-const LightView = ({ light, onCallback }: LightViewProps) => {
+const LightView = ({ light, onCallback }: LightViewProps): JSX.Element => {
     return (
         <div
             key={light.id}

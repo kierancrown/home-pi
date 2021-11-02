@@ -155,3 +155,5 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+mongodb/database/*

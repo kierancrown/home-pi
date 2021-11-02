@@ -9,7 +9,7 @@
     "start": "NODE_PATH=./dist node build/index.js",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "dev": "concurrently --kill-others \"nodemon src/index.ts\" \"cd frontend; npm run dev\"",
-    "build": "tsc -p .; cd frontend; npm run build",
+    "build": "tsc -p .",
     "docker-up": "docker-compose up -d",
     "docker-up-prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d",
     "docker-down": "docker-compose down"

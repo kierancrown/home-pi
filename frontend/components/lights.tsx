@@ -3,13 +3,13 @@ import { Lights, LightState } from '../types/hue';
 import { waitFor } from '../utils';
 import LightView from './Light';
 
-export default function LightsView() {
+export default function LightsView(): JSX.Element {
     const [lights, setLights] = useState<Lights>();
 
     const getLights = async () => {
         const res = await fetch('http://192.168.10.95:8080/hue/lights', { cache: 'no-cache' });
         if (res.status === 200) {
-            setLights((await res.json()) as Lights);
+            setLights(await res.json());
         } else {
             console.error('Unable to get lights from API');
         }
@@ -19,6 +19,7 @@ export default function LightsView() {
 
     useEffect(() => {
         getLights();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const toggleOn = async (id: string, state: LightState) => {
@@ -30,7 +31,7 @@ export default function LightsView() {
             body: JSON.stringify({ id, state }),
         });
         if (res.status === 200) {
-            setLights((await res.json()) as Lights);
+            setLights(await res.json());
             setTimeout(() => {
                 getLights();
             }, 500);
@@ -47,7 +48,7 @@ export default function LightsView() {
             <div role="list" className="flex space-x-4">
                 {lights &&
                     Object.values(lights).map((light) => {
-                        return <LightView light={light} onCallback={toggleOn} />;
+                        return <LightView key={light.uniqueid} light={light} onCallback={toggleOn} />;
                     })}
             </div>
         </>
