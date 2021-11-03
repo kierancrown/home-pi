@@ -5,3 +5,7 @@ services:
         build:
             target: production
         command: node dist/index.js
+    home-pi-ui:
+        build:
+            target: runner
+        command: yarn start

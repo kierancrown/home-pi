@@ -14,18 +14,18 @@ services:
             - '8080'
         ports:
             - '8080:8080'
-        command: node dist/index.js
+        command: npm run dev
     home-pi-ui:
         build:
             context: .
             dockerfile: ./frontend/Dockerfile
-            target: runner
+            target: dev
         container_name: home-pi-ui
         expose:
             - '3000'
         ports:
             - '3000:3000'
-        command: yarn start
+        command: yarn dev
     mongodb:
         image : mongo
         container_name: home-pi-db
