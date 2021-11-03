@@ -1,11 +1,13 @@
 import { yellow } from 'chalk';
 import * as dotenv from 'dotenv';
 import { initControllers } from './controllers';
+import { discoverBridge } from './helpers/hue';
 import { MongoDB } from './helpers/mongo';
 import { WebServer } from './server';
 
 async function main() {
     dotenv.config();
+    console.log(await discoverBridge());
     const database = MongoDB.getInstance();
     // TEST
     if (process.env.MONGODB_URL && process.env.DB_NAME) {
