@@ -25,7 +25,6 @@ services:
             - '3000'
         ports:
             - '3000:3000'
-        command: yarn dev
     mongodb:
         image : mongo
         container_name: home-pi-db

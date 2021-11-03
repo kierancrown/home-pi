@@ -2,8 +2,11 @@ import { Controller } from './controller';
 import axios from 'axios';
 import { Light, Lights } from '../types/hue';
 import { Request } from 'express';
+import ping from 'ping';
+import { waitFor } from '../utils';
 
 class HueController extends Controller {
+    private isConnected = false;
     private baseUrl: string;
     private bridgeIP: string;
     discoveredLights: Light[] = [];
@@ -13,7 +16,7 @@ class HueController extends Controller {
         this.bridgeIP = BridgeIP;
         this.baseUrl = `http://${BridgeIP}/api/${authKey}`;
         this.registerRoutes();
-        this.discoverLights();
+        this.discoverBridge();
     }
 
     registerRoutes(): void {
@@ -71,6 +74,18 @@ class HueController extends Controller {
         const res = await axios.get(`${this.baseUrl}/lights`);
         if (res.status === 200) return res.data;
         else return {};
+    }
+
+    async discoverBridge(): Promise<void> {
+        if (this.isConnected) return;
+        const res = await ping.promise.probe(this.bridgeIP);
+        if (res.alive === true) {
+            this.isConnected = true;
+            this.discoverLights();
+        } else {
+            await waitFor(1000);
+            await this.discoverBridge();
+        }
     }
 
     async changeLightState(id: string, state: string): Promise<unknown> {

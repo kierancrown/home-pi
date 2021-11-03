@@ -11,6 +11,13 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY ./frontend .
 COPY --from=deps /app/node_modules ./node_modules
+RUN yarn build && yarn install
+
+# Rebuild the source code only when needed
+FROM node:16-alpine AS builder-prod
+WORKDIR /app
+COPY ./frontend .
+COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 
 # Development image, copy all the files and run next
@@ -19,17 +26,17 @@ WORKDIR /app
 
 ENV NODE_ENV development
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+# RUN addgroup -g 1001 -S nodejs
+# RUN adduser -S nextjs -u 1001
 
 # You only need to copy next.config.js if you are NOT using the default configuration
-# COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-USER nextjs
+# USER nextjs
 
 EXPOSE 3000
 
@@ -52,11 +59,11 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 # You only need to copy next.config.js if you are NOT using the default configuration
-# COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder-prod /app/public ./public
+COPY --from=builder-prod --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder-prod /app/node_modules ./node_modules
+COPY --from=builder-prod /app/package.json ./package.json
 
 USER nextjs
 

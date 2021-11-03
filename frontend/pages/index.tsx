@@ -11,7 +11,7 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className="header space-y-3 flex flex-col mb-10">
-                <h1 className="text-5xl font-bold">Overview</h1>
+                <h1 className="text-5xl font-bold">Overview - Test</h1>
                 <h2 className="text-2xl font-medium ml-1">This will show all connected devices in all rooms</h2>
             </div>
             <LightsView />
