@@ -25,10 +25,10 @@ class MongoDB {
     private client: MongoClient | null = null;
     private isConnected = false;
 
-    connect(url: string, dbName: string): void {
+    async connect(url: string, dbName: string): Promise<boolean> {
         this.dbName = dbName;
         this.client = new MongoClient(url);
-        this.connectToDb();
+        return await this.connectToDb();
     }
 
     public static getInstance(): MongoDB {

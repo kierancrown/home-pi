@@ -1,3 +1,4 @@
+import { yellow } from 'chalk';
 import * as dotenv from 'dotenv';
 import { initControllers } from './controllers';
 import { MongoDB } from './helpers/mongo';
@@ -8,7 +9,17 @@ async function main() {
     const database = MongoDB.getInstance();
     // TEST
     if (process.env.MONGODB_URL && process.env.DB_NAME) {
-        await database.connect(process.env.MONGODB_URL, process.env.DB_NAME);
+        const connected = await database.connect(process.env.MONGODB_URL, process.env.DB_NAME);
+        if (connected) {
+            // Register device
+            // console.log(
+            //     await database.registerDevice({ name: 'test bulb', ip_address: '192.168.0.0', type: 'hue_bulb' }),
+            // );
+            // Unregister device
+            // console.log(await database.unregisterDevice('6182ae89a4bfc78e1f0a362a'));
+        } else {
+            console.warn(yellow('Not connected to db'));
+        }
     }
     const server = WebServer.getInstance();
     server.startServer(Number(process.env.SERVER_PORT) || 3000);
