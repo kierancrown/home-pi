@@ -3,10 +3,12 @@ import React, { createContext, useReducer, Context } from 'react';
 
 export enum ACTIONS {
     OPEN_SETUP_MODAL,
+    OPEN_ROOM_MODAL,
 }
 
 const initialData: SetupContextTypes = {
     setupModalOpen: false,
+    createRoomModalOpen: false,
 };
 
 export const SetupContext: Context<SetupContextTypes> = createContext(initialData);
@@ -16,6 +18,7 @@ SetupContext.displayName = 'Setup Context';
 interface SetupContextTypes {
     dispatch?: React.Dispatch<DispatchAction>;
     setupModalOpen: boolean;
+    createRoomModalOpen: boolean;
 }
 
 interface ContextProps {
@@ -32,6 +35,8 @@ const SetupContextProvider = ({ children }: ContextProps): JSX.Element => {
         switch (action.type) {
             case ACTIONS.OPEN_SETUP_MODAL:
                 return { ...state, setupModalOpen: action.value as boolean };
+            case ACTIONS.OPEN_ROOM_MODAL:
+                return { ...state, createRoomModalOpen: action.value as boolean };
             default:
                 return state;
         }

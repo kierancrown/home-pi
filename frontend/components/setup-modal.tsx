@@ -2,15 +2,43 @@
 import { Fragment, useContext, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
-import { SetupContext, ACTIONS } from '../../context/setup';
-import { classNames } from '../../utils';
+import { SetupContext, ACTIONS } from '../context/setup';
+import { classNames } from '../utils';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 function SetupModal(): JSX.Element {
     const { setupModalOpen, dispatch } = useContext(SetupContext);
-    const [error, setError] = useState(false);
+    const [homeName, setHomeName] = useState('');
+    const [error, setError] = useState<false | string>(false);
+    const router = useRouter();
 
     const setOpen = (value: boolean) => {
         if (dispatch) dispatch({ type: ACTIONS.OPEN_SETUP_MODAL, value });
+    };
+
+    const createHomeReq = async (): Promise<void> => {
+        try {
+            const res = await axios({
+                method: 'put',
+                url: 'http://localhost:8080/home',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({
+                    name: homeName,
+                }),
+            });
+            if (res.data.error === true) {
+                setError(res.data.message);
+            } else {
+                console.log('Created home with id' + res.data.id);
+                router.replace('/');
+                setOpen(false);
+            }
+        } catch (error) {
+            setError(String(error));
+        }
     };
 
     return (
@@ -72,15 +100,24 @@ function SetupModal(): JSX.Element {
                                         id="home"
                                         className={classNames(
                                             'block w-full pr-10 sm:text-sm rounded-md',
-                                            error
+                                            error !== false
                                                 ? 'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500'
                                                 : 'focus:ring-blue-500 focus:border-blue-500',
                                         )}
                                         placeholder="Home Name"
-                                        aria-invalid="true"
-                                        // aria-describedby="email-error"
+                                        value={homeName}
+                                        onChange={(e) => {
+                                            setHomeName(e.currentTarget.value);
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                createHomeReq();
+                                            }
+                                        }}
+                                        aria-invalid={error ? 'true' : 'false'}
+                                        aria-describedby={error ? 'home-name-error' : 'home-name'}
                                     />
-                                    {error && (
+                                    {error !== false && (
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                             <ExclamationCircleIcon
                                                 className="h-5 w-5 text-red-500"
@@ -89,9 +126,9 @@ function SetupModal(): JSX.Element {
                                         </div>
                                     )}
                                 </div>
-                                {error && (
+                                {error !== false && (
                                     <p className="mt-2 text-sm text-red-600" id="email-error">
-                                        A home with this name already exists.
+                                        {error}
                                     </p>
                                 )}
                             </div>
@@ -99,7 +136,7 @@ function SetupModal(): JSX.Element {
                                 <button
                                     type="button"
                                     className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
-                                    onClick={() => setOpen(false)}
+                                    onClick={createHomeReq}
                                 >
                                     Create new home
                                 </button>

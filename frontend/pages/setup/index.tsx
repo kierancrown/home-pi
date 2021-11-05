@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
-import SetupModal from './modal';
+import SetupModal from '../../components/setup-modal';
 import { SetupContext, ACTIONS } from '../../context/setup';
 
 const SetupHome: NextPage = () => {

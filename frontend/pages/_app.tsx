@@ -2,6 +2,10 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import SetupContextProvider from '../context/setup';
+import HomeContextProvider from '../context/home';
+import PageWrapper from '../components/PageWrapper';
+import SetupModal from '../components/setup-modal';
+import CreateRoomModal from '../components/create-room-modal';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     return (
@@ -14,7 +18,14 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
             </Head>
             <div className="p-6">
                 <SetupContextProvider>
-                    <Component {...pageProps} />
+                    <HomeContextProvider>
+                        {/* Add component here that checks if a home is setup */}
+                        <SetupModal />
+                        <CreateRoomModal />
+                        <PageWrapper>
+                            <Component {...pageProps} />
+                        </PageWrapper>
+                    </HomeContextProvider>
                 </SetupContextProvider>
             </div>
         </>

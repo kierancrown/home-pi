@@ -117,6 +117,17 @@ class MongoDB {
         }
     }
 
+    async homeInfo(id: string): Promise<Home | null> {
+        if (!this.client || !this.isConnected) return null;
+        try {
+            const db = this.client.db(this.dbName);
+            const collection = db.collection('home');
+            return (await collection.findOne({ _id: new ObjectId(id) })) as Home;
+        } catch (error) {
+            return null;
+        }
+    }
+
     async listHomes(): Promise<Home[]> {
         if (!this.client || !this.isConnected) return [];
         try {
