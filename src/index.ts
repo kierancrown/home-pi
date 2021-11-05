@@ -14,9 +14,15 @@ async function main() {
         const connected = await database.connect(process.env.MONGODB_URL, process.env.DB_NAME);
         if (connected) {
             // Register device
-            // console.log(
-            //     await database.registerDevice({ name: 'test bulb', ip_address: '192.168.0.0', type: 'hue_bulb' }),
-            // );
+            console.log(
+                await database.registerDevice({
+                    name: 'test bulb',
+                    ip_address: '192.168.0.0',
+                    mac_address: 'hello',
+                    type: 'hue_bulb',
+                }),
+            );
+            console.log(await database.listDevices());
             // Unregister device
             // console.log(await database.unregisterDevice('6182ae89a4bfc78e1f0a362a'));
         } else {
