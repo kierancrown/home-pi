@@ -5,4 +5,9 @@ async function waitFor(x: number): Promise<number> {
         }, x);
     });
 }
-export { waitFor };
+
+function classNames(...classes: string[]): string {
+    return classes.filter(Boolean).join(' ');
+}
+
+export { waitFor, classNames };

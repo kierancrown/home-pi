@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import SetupContextProvider from '../context/setup';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     return (
@@ -12,7 +13,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                 <meta name="apple-mobile-web-app-status-bar" content="#90cdf4" />
             </Head>
             <div className="p-6">
-                <Component {...pageProps} />
+                <SetupContextProvider>
+                    <Component {...pageProps} />
+                </SetupContextProvider>
             </div>
         </>
     );
